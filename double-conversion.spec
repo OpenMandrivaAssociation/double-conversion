@@ -8,7 +8,7 @@
 Summary:	Library providing binary-decimal and decimal-binary routines for IEEE doubles
 Name:		double-conversion
 Version:	2.0.1
-Release:	1
+Release:	2
 License:	BSD
 Group:          System/Libraries
 URL:            https://github.com/google/double-conversion/
@@ -36,6 +36,7 @@ and improved so that it can be used more easily in other projects.
 Summary:	Development files and headers for %{name}
 Group:		Development/Other
 Provides:	%{name}-devel = %{EVRD}
+Requires:	%{libname} = %{EVRD}
 
 %description -n %{develname}
 Contains header files for developing applications that 
