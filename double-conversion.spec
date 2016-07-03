@@ -13,7 +13,7 @@ License:        BSD
 Group:          System/Libraries
 URL:            https://github.com/google/double-conversion/
 # git archive --format=tar --prefix double-conversion-2.0.1-$(date +%Y%m%d)/ HEAD | xz -vf > double-conversion-2.0.1-$(date +%Y%m%d).tar.xz
-Source0:	https://github.com/google/double-conversion/archive/v%{version}.tar.gz#/%{name}-%{version}-%{gitdate}.tar.xz
+Source0:	https://github.com/google/double-conversion/archive/%{name}-%{version}-%{gitdate}.tar.xz
 # Upstream patch to support SOVERSION
 Patch0:		double-conversion-soversion.patch
 # Use install paths in installed cmake files
