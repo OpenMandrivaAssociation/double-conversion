@@ -56,7 +56,7 @@ Static %{name} library.
 # Fix up install locations
 # https://github.com/floitsch/double-conversion/issues/8
 sed -i -e s,lib/CMake,%{_lib}/cmake, CMakeLists.txt
-sed -i -e s,/lib,/%{_lib}, src/CMakeLists.txt
+sed -i -e s,/lib,/%{_lib}, %{name}/CMakeLists.txt
 
 %build
 mkdir -p build-shared
