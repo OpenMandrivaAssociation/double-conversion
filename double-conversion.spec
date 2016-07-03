@@ -61,14 +61,14 @@ sed -i -e s,/lib,/%{_lib}, %{name}/CMakeLists.txt
 %build
 mkdir -p build-shared
 pushd build-shared
-  %cmake -DBUILD_TESTING=ON
+  %cmake -DBUILD_TESTING=ON ..
   %make
 popd
 
 %if %{with static_libs}
 mkdir  -p build-static
 pushd build-static
-  CXXFLAGS="%{optflags} -fPIC" %cmake -DBUILD_SHARED_LIBS=NO
+  CXXFLAGS="%{optflags} -fPIC" %cmake -DBUILD_SHARED_LIBS=NO ..
   %make
 popd
 %endif
