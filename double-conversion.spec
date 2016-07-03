@@ -9,7 +9,7 @@ Summary:	Library providing binary-decimal and decimal-binary routines for IEEE d
 Name:		double-conversion
 Version:	2.0.1
 Release:	1
-License:        BSD
+License:	BSD
 Group:          System/Libraries
 URL:            https://github.com/google/double-conversion/
 # git archive --format=tar --prefix double-conversion-2.0.1-$(date +%Y%m%d)/ HEAD | xz -vf > double-conversion-2.0.1-$(date +%Y%m%d).tar.xz
@@ -24,7 +24,7 @@ and improved so that it can be used more easily in other projects.
 
 %package -n %{libname}
 Summary:	Library providing binary-decimal and decimal-binary routines for IEEE doubles
-Group:          System/Libraries
+Group:		System/Libraries
 
 %description -n %{libname}
 Provides binary-decimal and decimal-binary routines for IEEE doubles.
@@ -33,20 +33,22 @@ extracted from the V8 JavaScript engine. The code has been re-factored
 and improved so that it can be used more easily in other projects.
 
 %package -n %{develname}
-Summary:    Development files and headers for %{name}
-Group:      Development/Other
+Summary:	Development files and headers for %{name}
+Group:		Development/Other
+Provides:	%{name}-devel = %{EVRD}
 
 %description -n %{develname}
-Contains header files for developing applications that use the %{name}
-library.
+Contains header files for developing applications that 
+use the %{name} library.
 
-There is extensive documentation in src/double-conversion.h. Other
-examples can be found in test/cctest/test-conversions.cc.
+There is extensive documentation in src/double-conversion.h.
+Other examples can be found in test/cctest/test-conversions.cc.
 
 %package -n %{staticname}
-Summary:    Static library for %{name}
-Group:      Development/Other
-Requires:   %{develname} = %{EVRD}
+Summary:	Static library for %{name}
+Group:		Development/Other
+Requires:	%{develname} = %{EVRD}
+Provides:	%{name}-static-devel = %{EVRD}
 
 %description -n %{staticname}
 Static %{name} library.
@@ -61,14 +63,14 @@ sed -i -e s,/lib,/%{_lib}, %{name}/CMakeLists.txt
 %build
 mkdir -p build-shared
 pushd build-shared
-  %cmake -DBUILD_TESTING=ON ..
+  %cmake -DBUILD_TESTING=ON ../..
   %make
 popd
 
 %if %{with static_libs}
 mkdir  -p build-static
 pushd build-static
-  CXXFLAGS="%{optflags} -fPIC" %cmake -DBUILD_SHARED_LIBS=NO ..
+  CXXFLAGS="%{optflags} -fPIC" %cmake -DBUILD_SHARED_LIBS=NO ../..
   %make
 popd
 %endif
@@ -76,12 +78,12 @@ popd
 %install
 %if %{with static_libs}
 pushd build-static
-  %makeinstall_std
+  %makeinstall_std -C build
 popd
 %endif
 
 pushd build-shared
-  %makeinstall_std
+  %makeinstall_std -C build
 popd
 
 %check
