@@ -53,8 +53,6 @@ Static %{name} library.
 
 %prep
 %setup -qn %{name}-%{version}-%{gitdate}
-%patch0 -p1 -b .soversion
-%patch1 -p1 -b .cmake
 # Fix up install locations
 # https://github.com/floitsch/double-conversion/issues/8
 sed -i -e s,lib/CMake,%{_lib}/cmake, CMakeLists.txt
