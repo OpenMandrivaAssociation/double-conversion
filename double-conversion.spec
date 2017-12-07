@@ -97,7 +97,7 @@ popd
 %{_libdir}/lib%{name}.so.%{major}*
 
 %files -n %{develname}
-%doc LICENSE README AUTHORS Changelog
+%doc LICENSE README.md AUTHORS Changelog
 %{_libdir}/lib%{name}.so
 %{_libdir}/cmake/%{name}
 %{_includedir}/%{name}
