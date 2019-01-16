@@ -1,4 +1,4 @@
-%define major 1
+%define major 2
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 %define staticname %mklibname %{name} -d -s
@@ -56,7 +56,7 @@ Provides:	%{name}-static-devel = %{EVRD}
 Static %{name} library.
 
 %prep
-%setup -qn %{name}-%{version}
+%autosetup -n %{name}-%{version}
 # Fix up install locations
 # https://github.com/floitsch/double-conversion/issues/8
 sed -i -e s,lib/CMake,%{_lib}/cmake, CMakeLists.txt
@@ -66,26 +66,26 @@ sed -i -e s,/lib,/%{_lib}, %{name}/CMakeLists.txt
 mkdir -p build-shared
 pushd build-shared
   %cmake -DBUILD_TESTING=ON ../..
-  %make
+  %make_build
 popd
 
 %if %{with static_libs}
 mkdir  -p build-static
 pushd build-static
   CXXFLAGS="%{optflags} -fPIC" %cmake -DBUILD_SHARED_LIBS=NO ../..
-  %make
+  %make_build
 popd
 %endif
 
 %install
 %if %{with static_libs}
 pushd build-static
-  %makeinstall_std -C build
+  %make_install -C build
 popd
 %endif
 
 pushd build-shared
-  %makeinstall_std -C build
+  %make_install -C build
 popd
 
 %check
