@@ -1,4 +1,4 @@
-%define major 2
+%define major 3
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 %define staticname %mklibname %{name} -d -s
@@ -7,14 +7,14 @@
 
 Summary:	Library providing binary-decimal and decimal-binary routines for IEEE doubles
 Name:		double-conversion
-Version:	3.0.3
-Release:	2
+Version:	3.1.1
+Release:	1
 License:	BSD
 Group:          System/Libraries
 URL:            https://github.com/google/double-conversion/
 # git archive --format=tar --prefix double-conversion-2.0.1-$(date +%Y%m%d)/ HEAD | xz -vf > double-conversion-2.0.1-$(date +%Y%m%d).tar.xz
 #Source0:	https://github.com/google/double-conversion/archive/%{name}-%{version}-%{gitdate}.tar.gz
-Source0:	https://github.com/google/double-conversion/archive/%{name}-%{version}.tar.gz
+Source0:	https://github.com/google/double-conversion/archive/v%{version}.tar.gz
 BuildRequires:  cmake
 
 %description
@@ -59,8 +59,7 @@ Static %{name} library.
 %autosetup -n %{name}-%{version}
 # Fix up install locations
 # https://github.com/floitsch/double-conversion/issues/8
-sed -i -e s,lib/CMake,%{_lib}/cmake, CMakeLists.txt
-sed -i -e s,/lib,/%{_lib}, %{name}/CMakeLists.txt
+sed -i -e 's,lib/,%{_lib}/,g;s,"lib","%{_lib}",g' CMakeLists.txt
 
 %build
 mkdir -p build-shared
