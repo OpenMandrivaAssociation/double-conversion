@@ -7,14 +7,14 @@
 
 Summary:	Library providing binary-decimal and decimal-binary routines for IEEE doubles
 Name:		double-conversion
-Version:	3.1.1
+Version:	3.1.2
 Release:	1
 License:	BSD
 Group:          System/Libraries
 URL:            https://github.com/google/double-conversion/
 # git archive --format=tar --prefix double-conversion-2.0.1-$(date +%Y%m%d)/ HEAD | xz -vf > double-conversion-2.0.1-$(date +%Y%m%d).tar.xz
 #Source0:	https://github.com/google/double-conversion/archive/%{name}-%{version}-%{gitdate}.tar.gz
-Source0:	https://github.com/google/double-conversion/archive/v%{version}.tar.gz
+Source0:	https://github.com/google/double-conversion/archive/%{name}-%{version}.tar.gz
 BuildRequires:  cmake
 
 %description
