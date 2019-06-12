@@ -66,14 +66,14 @@ mkdir -p build-shared
 cd build-shared
   %cmake -DBUILD_TESTING=ON ../..
   %make_build
-cd ..
+cd ../..
 
 %if %{with static_libs}
 mkdir  -p build-static
 cd build-static
   CXXFLAGS="%{optflags} -fPIC" %cmake -DBUILD_SHARED_LIBS=NO ../..
   %make_build
-cd ..
+cd ../..
 %endif
 
 %install
