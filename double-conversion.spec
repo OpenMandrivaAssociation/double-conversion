@@ -7,7 +7,7 @@
 
 Summary:	Library providing binary-decimal and decimal-binary routines for IEEE doubles
 Name:		double-conversion
-Version:	3.1.4
+Version:	3.1.5
 Release:	1
 License:	BSD
 Group:          System/Libraries
@@ -63,34 +63,34 @@ sed -i -e 's,lib/,%{_lib}/,g;s,"lib","%{_lib}",g' CMakeLists.txt
 
 %build
 mkdir -p build-shared
-pushd build-shared
+cd build-shared
   %cmake -DBUILD_TESTING=ON ../..
   %make_build
-popd
+cd -
 
 %if %{with static_libs}
 mkdir  -p build-static
-pushd build-static
+cd build-static
   CXXFLAGS="%{optflags} -fPIC" %cmake -DBUILD_SHARED_LIBS=NO ../..
   %make_build
-popd
+cd -
 %endif
 
 %install
 %if %{with static_libs}
-pushd build-static
+cd build-static
   %make_install -C build
-popd
+cd -
 %endif
 
-pushd build-shared
+cd build-shared
   %make_install -C build
-popd
+cd -
 
 %check
-pushd build-shared
+cd build-shared
   ctest -V
-popd
+cd -
 
 %files -n %{libname}
 %{_libdir}/lib%{name}.so.%{major}*
