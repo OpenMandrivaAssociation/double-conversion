@@ -2,13 +2,12 @@
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 %define staticname %mklibname %{name} -d -s
-%define gitdate 20160703
 %bcond_without static_libs # don't build static libraries
 
 Summary:	Library providing binary-decimal and decimal-binary routines for IEEE doubles
 Name:		double-conversion
 Version:	3.1.5
-Release:	1
+Release:	2
 License:	BSD
 Group:          System/Libraries
 URL:            https://github.com/google/double-conversion/
@@ -16,6 +15,34 @@ URL:            https://github.com/google/double-conversion/
 #Source0:	https://github.com/google/double-conversion/archive/%{name}-%{version}-%{gitdate}.tar.gz
 Source0:	https://github.com/google/double-conversion/archive/%{name}-%{version}.tar.gz
 BuildRequires:  cmake
+BuildRequires:	ninja
+# Patches from upstream git
+Patch0:		0001-Use-standard-min-max.-102.patch
+Patch1:		0002-Consistent-macro-prefix.-101.patch
+Patch2:		0003-Fix-naming.-103.patch
+Patch3:		0004-Split-double-conversion.-104.patch
+Patch4:		0005-Split-Strtod-106.patch
+Patch5:		0006-Optimise-Bignum-layout.-107.patch
+Patch6:		0007-Remove-redundant-parenthesis.patch
+Patch7:		0008-More-Bignum-fiddling.-108.patch
+Patch8:		0009-Remove-reference-to-diy-fp.cc.patch
+Patch9:		0010-Add-min-exponent-width-option-in-double-to-string-co.patch
+Patch10:	0011-Add-support-for-e2k-architecture.-118.patch
+Patch11:	0012-Add-support-for-microblaze.patch
+Patch12:	0013-Pseiderer-add-nios2-and-xtensa-001-119.patch
+Patch13:	0014-Add-wasm32-as-supported-platform-120.patch
+Patch14:	0015-Add-full-license-to-test-.cc-files-missing-it.-121.patch
+Patch15:	0016-Fix-strtod.cc-undefined-constants-123.patch
+Patch16:	0017-Move-buffer-and-buffer_pos-down-125.patch
+Patch17:	0018-Add-support-for-quiet-and-signaling-NaNs-to-the-ieee.patch
+Patch18:	0019-Fix-broken-MSVC-builds.-130.patch
+Patch19:	0020-Add-DOUBLE_CONVERSION_HAS_ATTRIBUTE-to-fix-warnings-.patch
+Patch20:	0021-Fixes-bazel-build-for-downstream-projects.-133.patch
+Patch21:	0022-test-cctest-CMakeLists.txt-Added-bigobj-for-MSVC-tes.patch
+Patch22:	0023-CMakeLists.txt-Export-all-symbols-136.patch
+Patch23:	0024-Fix-141-142.patch
+# OpenMandriva specific
+Patch100:	double-conversion-3.1.5-no-assert-on-DoubleToAscii-on-special.patch
 
 %description
 Provides binary-decimal and decimal-binary routines for IEEE doubles.
@@ -56,7 +83,7 @@ Provides:	%{name}-static-devel = %{EVRD}
 Static %{name} library.
 
 %prep
-%autosetup -n %{name}-%{version}
+%autosetup -p1 -n %{name}-%{version}
 # Fix up install locations
 # https://github.com/floitsch/double-conversion/issues/8
 sed -i -e 's,lib/,%{_lib}/,g;s,"lib","%{_lib}",g' CMakeLists.txt
@@ -64,27 +91,27 @@ sed -i -e 's,lib/,%{_lib}/,g;s,"lib","%{_lib}",g' CMakeLists.txt
 %build
 mkdir -p build-shared
 cd build-shared
-  %cmake -DBUILD_TESTING=ON ../..
-  %make_build
+  %cmake -DBUILD_TESTING=ON ../.. -G Ninja
+  %ninja_build
 cd ../..
 
 %if %{with static_libs}
 mkdir  -p build-static
 cd build-static
-  CXXFLAGS="%{optflags} -fPIC" %cmake -DBUILD_SHARED_LIBS=NO ../..
-  %make_build
+  CXXFLAGS="%{optflags} -fPIC" %cmake -DBUILD_SHARED_LIBS=NO ../.. -G Ninja
+  %ninja_build
 cd ../..
 %endif
 
 %install
 %if %{with static_libs}
 cd build-static
-  %make_install -C build
+  %ninja_install -C build
 cd -
 %endif
 
 cd build-shared
-  %make_install -C build
+  %ninja_install -C build
 cd -
 
 %check

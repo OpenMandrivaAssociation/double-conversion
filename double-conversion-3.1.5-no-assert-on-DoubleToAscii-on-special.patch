@@ -1,0 +1,26 @@
+diff -up double-conversion-3.1.5/double-conversion/double-conversion.cc..omv~ double-conversion-3.1.5/double-conversion/double-conversion.cc.
+diff -up double-conversion-3.1.5/double-conversion/double-conversion.cc.omv~ double-conversion-3.1.5/double-conversion/double-conversion.cc
+diff -up double-conversion-3.1.5/double-conversion/double-to-string.cc.omv~ double-conversion-3.1.5/double-conversion/double-to-string.cc
+--- double-conversion-3.1.5/double-conversion/double-to-string.cc.omv~	2020-11-18 01:57:46.930156244 +0100
++++ double-conversion-3.1.5/double-conversion/double-to-string.cc	2020-11-18 02:06:34.668627848 +0100
+@@ -372,8 +372,19 @@ void DoubleToStringConverter::DoubleToAs
+                                             bool* sign,
+                                             int* length,
+                                             int* point) {
++  // FIXME
++  // Upstream does DOUBLE_CONVERSION_ASSERT(!Double(v).IsSpecial()); here
++  // But we're hitting this assertion in Qt on aarch64 multiple times.
++  // This needs further investigation; in the mean time, let's turn
++  // the assertion into something slightly less radical.
++  if(Double(v).IsSpecial()) {
++    *buffer = 0;
++    *sign = false;
++    *length = 0;
++    *point = 0;
++    return;
++  }
+   Vector<char> vector(buffer, buffer_length);
+-  DOUBLE_CONVERSION_ASSERT(!Double(v).IsSpecial());
+   DOUBLE_CONVERSION_ASSERT(mode == SHORTEST || mode == SHORTEST_SINGLE || requested_digits >= 0);
+ 
+   if (Double(v).Sign() < 0) {

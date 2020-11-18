@@ -1,0 +1,112 @@
+From 47a8776b66c85c2b1a42b29f7a7d784de0e5770a Mon Sep 17 00:00:00 2001
+From: Jeff Genovy <29107334+jefgen@users.noreply.github.com>
+Date: Fri, 3 Apr 2020 02:04:43 -0700
+Subject: [PATCH 19/24] Fix broken MSVC builds. (#130)
+
+---
+ msvc/double-conversion.vcxproj         |  9 +++++----
+ msvc/double-conversion.vcxproj.filters | 19 +++++++++++--------
+ msvc/run_tests/run_tests.vcxproj       |  1 +
+ 3 files changed, 17 insertions(+), 12 deletions(-)
+
+diff --git a/msvc/double-conversion.vcxproj b/msvc/double-conversion.vcxproj
+index 5616c8a..e2d2ef8 100644
+--- a/msvc/double-conversion.vcxproj
++++ b/msvc/double-conversion.vcxproj
+@@ -147,24 +147,25 @@
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+-    <ClCompile Include="..\double-conversion\bignum-dtoa.cc" />
+     <ClCompile Include="..\double-conversion\bignum.cc" />
++    <ClCompile Include="..\double-conversion\bignum-dtoa.cc" />
+     <ClCompile Include="..\double-conversion\cached-powers.cc" />
+-    <ClCompile Include="..\double-conversion\diy-fp.cc" />
+-    <ClCompile Include="..\double-conversion\double-conversion.cc" />
++    <ClCompile Include="..\double-conversion\double-to-string.cc" />
+     <ClCompile Include="..\double-conversion\fast-dtoa.cc" />
+     <ClCompile Include="..\double-conversion\fixed-dtoa.cc" />
++    <ClCompile Include="..\double-conversion\string-to-double.cc" />
+     <ClCompile Include="..\double-conversion\strtod.cc" />
+   </ItemGroup>
+   <ItemGroup>
+-    <ClInclude Include="..\double-conversion\bignum-dtoa.h" />
+     <ClInclude Include="..\double-conversion\bignum.h" />
+     <ClInclude Include="..\double-conversion\cached-powers.h" />
+     <ClInclude Include="..\double-conversion\diy-fp.h" />
+     <ClInclude Include="..\double-conversion\double-conversion.h" />
++    <ClInclude Include="..\double-conversion\double-to-string.h" />
+     <ClInclude Include="..\double-conversion\fast-dtoa.h" />
+     <ClInclude Include="..\double-conversion\fixed-dtoa.h" />
+     <ClInclude Include="..\double-conversion\ieee.h" />
++    <ClInclude Include="..\double-conversion\string-to-double.h" />
+     <ClInclude Include="..\double-conversion\strtod.h" />
+     <ClInclude Include="..\double-conversion\utils.h" />
+   </ItemGroup>
+diff --git a/msvc/double-conversion.vcxproj.filters b/msvc/double-conversion.vcxproj.filters
+index 664a27f..cebae94 100644
+--- a/msvc/double-conversion.vcxproj.filters
++++ b/msvc/double-conversion.vcxproj.filters
+@@ -24,19 +24,19 @@
+     <ClCompile Include="..\double-conversion\cached-powers.cc">
+       <Filter>Source Files</Filter>
+     </ClCompile>
+-    <ClCompile Include="..\double-conversion\diy-fp.cc">
++    <ClCompile Include="..\double-conversion\fast-dtoa.cc">
+       <Filter>Source Files</Filter>
+     </ClCompile>
+-    <ClCompile Include="..\double-conversion\double-conversion.cc">
++    <ClCompile Include="..\double-conversion\fixed-dtoa.cc">
+       <Filter>Source Files</Filter>
+     </ClCompile>
+-    <ClCompile Include="..\double-conversion\fast-dtoa.cc">
++    <ClCompile Include="..\double-conversion\strtod.cc">
+       <Filter>Source Files</Filter>
+     </ClCompile>
+-    <ClCompile Include="..\double-conversion\fixed-dtoa.cc">
++    <ClCompile Include="..\double-conversion\double-to-string.cc">
+       <Filter>Source Files</Filter>
+     </ClCompile>
+-    <ClCompile Include="..\double-conversion\strtod.cc">
++    <ClCompile Include="..\double-conversion\string-to-double.cc">
+       <Filter>Source Files</Filter>
+     </ClCompile>
+   </ItemGroup>
+@@ -44,9 +44,6 @@
+     <ClInclude Include="..\double-conversion\bignum.h">
+       <Filter>Header Files</Filter>
+     </ClInclude>
+-    <ClInclude Include="..\double-conversion\bignum-dtoa.h">
+-      <Filter>Header Files</Filter>
+-    </ClInclude>
+     <ClInclude Include="..\double-conversion\cached-powers.h">
+       <Filter>Header Files</Filter>
+     </ClInclude>
+@@ -71,5 +68,11 @@
+     <ClInclude Include="..\double-conversion\utils.h">
+       <Filter>Header Files</Filter>
+     </ClInclude>
++    <ClInclude Include="..\double-conversion\double-to-string.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\double-conversion\string-to-double.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
+   </ItemGroup>
+ </Project>
+\ No newline at end of file
+diff --git a/msvc/run_tests/run_tests.vcxproj b/msvc/run_tests/run_tests.vcxproj
+index 05d2873..1cb0d36 100644
+--- a/msvc/run_tests/run_tests.vcxproj
++++ b/msvc/run_tests/run_tests.vcxproj
+@@ -109,6 +109,7 @@
+       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>false</SDLCheck>
+       <AdditionalIncludeDirectories>$(SolutionDir)..</AdditionalIncludeDirectories>
++      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
+-- 
+2.29.2
+

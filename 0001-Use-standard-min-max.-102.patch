@@ -1,0 +1,118 @@
+From e394b490fc7d56dd76ce43fb6024c929ceb1e309 Mon Sep 17 00:00:00 2001
+From: "Dr. Colin Hirsch" <colinh-github-06134@icemx.net>
+Date: Tue, 11 Jun 2019 17:43:56 +0200
+Subject: [PATCH 01/24] Use standard min/max. (#102)
+
+---
+ double-conversion/bignum.cc            | 10 ++++++----
+ double-conversion/double-conversion.cc |  5 +++--
+ double-conversion/utils.h              | 14 --------------
+ 3 files changed, 9 insertions(+), 20 deletions(-)
+
+diff --git a/double-conversion/bignum.cc b/double-conversion/bignum.cc
+index d077eef..fb5d7e7 100644
+--- a/double-conversion/bignum.cc
++++ b/double-conversion/bignum.cc
+@@ -25,6 +25,8 @@
+ // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
++#include <algorithm>
++
+ #include "bignum.h"
+ #include "utils.h"
+ 
+@@ -186,7 +188,7 @@ void Bignum::AddBignum(const Bignum& other) {
+   //  cccccccccccc 0000
+   // In both cases we might need a carry bigit.
+ 
+-  EnsureCapacity(1 + Max(BigitLength(), other.BigitLength()) - exponent_);
++  EnsureCapacity(1 + (std::max)(BigitLength(), other.BigitLength()) - exponent_);
+   Chunk carry = 0;
+   int bigit_pos = other.exponent_ - exponent_;
+   ASSERT(bigit_pos >= 0);
+@@ -203,7 +205,7 @@ void Bignum::AddBignum(const Bignum& other) {
+     carry = sum >> kBigitSize;
+     bigit_pos++;
+   }
+-  used_digits_ = Max(bigit_pos, used_digits_);
++  used_digits_ = (std::max)(bigit_pos, used_digits_);
+   ASSERT(IsClamped());
+ }
+ 
+@@ -623,7 +625,7 @@ int Bignum::Compare(const Bignum& a, const Bignum& b) {
+   int bigit_length_b = b.BigitLength();
+   if (bigit_length_a < bigit_length_b) return -1;
+   if (bigit_length_a > bigit_length_b) return +1;
+-  for (int i = bigit_length_a - 1; i >= Min(a.exponent_, b.exponent_); --i) {
++  for (int i = bigit_length_a - 1; i >= (std::min)(a.exponent_, b.exponent_); --i) {
+     Chunk bigit_a = a.BigitAt(i);
+     Chunk bigit_b = b.BigitAt(i);
+     if (bigit_a < bigit_b) return -1;
+@@ -652,7 +654,7 @@ int Bignum::PlusCompare(const Bignum& a, const Bignum& b, const Bignum& c) {
+ 
+   Chunk borrow = 0;
+   // Starting at min_exponent all digits are == 0. So no need to compare them.
+-  int min_exponent = Min(Min(a.exponent_, b.exponent_), c.exponent_);
++  int min_exponent = (std::min)((std::min)(a.exponent_, b.exponent_), c.exponent_);
+   for (int i = c.BigitLength() - 1; i >= min_exponent; --i) {
+     Chunk chunk_a = a.BigitAt(i);
+     Chunk chunk_b = b.BigitAt(i);
+diff --git a/double-conversion/double-conversion.cc b/double-conversion/double-conversion.cc
+index 6da28ed..be15a22 100644
+--- a/double-conversion/double-conversion.cc
++++ b/double-conversion/double-conversion.cc
+@@ -25,6 +25,7 @@
+ // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
++#include <algorithm>
+ #include <climits>
+ #include <locale>
+ #include <cmath>
+@@ -187,7 +188,7 @@ bool DoubleToStringConverter::ToShortestIeeeNumber(
+       (exponent < decimal_in_shortest_high_)) {
+     CreateDecimalRepresentation(decimal_rep, decimal_rep_length,
+                                 decimal_point,
+-                                Max(0, decimal_rep_length - decimal_point),
++                                (std::max)(0, decimal_rep_length - decimal_point),
+                                 result_builder);
+   } else {
+     CreateExponentialRepresentation(decimal_rep, decimal_rep_length, exponent,
+@@ -338,7 +339,7 @@ bool DoubleToStringConverter::ToPrecision(double value,
+                                     result_builder);
+   } else {
+     CreateDecimalRepresentation(decimal_rep, decimal_rep_length, decimal_point,
+-                                Max(0, precision - decimal_point),
++                                (std::max)(0, precision - decimal_point),
+                                 result_builder);
+   }
+   return true;
+diff --git a/double-conversion/utils.h b/double-conversion/utils.h
+index 4328344..0122354 100644
+--- a/double-conversion/utils.h
++++ b/double-conversion/utils.h
+@@ -178,20 +178,6 @@ namespace double_conversion {
+ 
+ static const int kCharSize = sizeof(char);
+ 
+-// Returns the maximum of the two parameters.
+-template <typename T>
+-static T Max(T a, T b) {
+-  return a < b ? b : a;
+-}
+-
+-
+-// Returns the minimum of the two parameters.
+-template <typename T>
+-static T Min(T a, T b) {
+-  return a < b ? a : b;
+-}
+-
+-
+ inline int StrLength(const char* string) {
+   size_t length = strlen(string);
+   ASSERT(length == static_cast<size_t>(static_cast<int>(length)));
+-- 
+2.29.2
+

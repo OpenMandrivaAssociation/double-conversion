@@ -1,0 +1,27 @@
+From b0066ce517ed797f8a74aebb19c25992221d8e5e Mon Sep 17 00:00:00 2001
+From: Mario Emmenlauer <mario@emmenlauer.de>
+Date: Mon, 29 Jun 2020 16:14:32 +0200
+Subject: [PATCH 22/24] test/cctest/CMakeLists.txt: Added /bigobj for MSVC
+ tests (#135)
+
+---
+ test/cctest/CMakeLists.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/test/cctest/CMakeLists.txt b/test/cctest/CMakeLists.txt
+index cdb5538..29d93d3 100644
+--- a/test/cctest/CMakeLists.txt
++++ b/test/cctest/CMakeLists.txt
+@@ -18,6 +18,9 @@ set(CCTEST_SRC
+ 
+ add_executable(cctest ${CCTEST_SRC})
+ target_link_libraries(cctest double-conversion)
++if(MSVC)
++    target_compile_options(cctest PRIVATE /bigobj)
++endif()
+ 
+ add_test(NAME test_bignum
+   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+-- 
+2.29.2
+
