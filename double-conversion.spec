@@ -1,3 +1,5 @@
+%global optflags %{optflags} -O3
+
 %define major 3
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
@@ -7,14 +9,14 @@
 Summary:	Library providing binary-decimal and decimal-binary routines for IEEE doubles
 Name:		double-conversion
 Version:	3.1.5
-Release:	2
+Release:	3
 License:	BSD
-Group:          System/Libraries
-URL:            https://github.com/google/double-conversion/
+Group:		System/Libraries
+URL:		https://github.com/google/double-conversion/
 # git archive --format=tar --prefix double-conversion-2.0.1-$(date +%Y%m%d)/ HEAD | xz -vf > double-conversion-2.0.1-$(date +%Y%m%d).tar.xz
 #Source0:	https://github.com/google/double-conversion/archive/%{name}-%{version}-%{gitdate}.tar.gz
 Source0:	https://github.com/google/double-conversion/archive/%{name}-%{version}.tar.gz
-BuildRequires:  cmake
+BuildRequires:	cmake
 BuildRequires:	ninja
 # Patches from upstream git
 Patch0:		0001-Use-standard-min-max.-102.patch
