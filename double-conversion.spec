@@ -8,7 +8,7 @@
 
 Summary:	Library providing binary-decimal and decimal-binary routines for IEEE doubles
 Name:		double-conversion
-Version:	3.1.7
+Version:	3.2.1
 Release:	1
 License:	BSD
 Group:		System/Libraries
