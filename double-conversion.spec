@@ -8,8 +8,8 @@
 
 Summary:	Library providing binary-decimal and decimal-binary routines for IEEE doubles
 Name:		double-conversion
-Version:	3.2.1
-Release:	3
+Version:	3.3.0
+Release:	1
 License:	BSD
 Group:		System/Libraries
 URL:		https://github.com/google/double-conversion/
